@@ -109,31 +109,57 @@
   }
 
   let deferredPrompt;
+  const banner = document.getElementById('installBanner');
+
+  // 监听安装事件
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    document.getElementById('installBanner').style.display = 'block';
+    banner.style.display = 'block'; // 主动显示手动安装横幅
+  });
+
+  // 监听已安装事件
+  window.addEventListener('appinstalled', () => {
+    banner.style.display = 'none';
+    deferredPrompt = null;
+    console.log('App 已成功安装');
   });
 
   function triggerInstall() {
     if (deferredPrompt) {
       deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(() => {
-        document.getElementById('installBanner').style.display = 'none';
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          banner.style.display = 'none';
+        }
         deferredPrompt = null;
       });
+    } else {
+      // 针对不支持或已安装情况的引导
+      if (isIos()) {
+        alert("🍎 iOS 用户请点击浏览器底部的‘分享’按钮，然后选择‘添加到主屏幕’");
+      } else {
+        alert("请在浏览器菜单中选择‘添加到主屏幕’或‘安装应用’");
+      }
     }
   }
 
-  // iOS 特殊引导
-  const isIos = () => /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
-  const isStandalone = () => ('standalone' in window.navigator) && (window.navigator.standalone);
-  if (isIos() && !isStandalone()) {
-    setTimeout(() => {
-      document.getElementById('installBanner').innerHTML = "🍎 点击下方“分享”按钮 -> “添加到主屏幕”";
-      document.getElementById('installBanner').style.display = 'block';
-    }, 5000);
+  // iOS 特殊引导判断
+  function isIos() {
+    return /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
   }
+
+  const isStandalone = () => ('standalone' in window.navigator) && (window.navigator.standalone);
+
+  // 初始化检查
+  window.addEventListener('DOMContentLoaded', () => {
+    if (isIos() && !isStandalone()) {
+      setTimeout(() => {
+        banner.innerHTML = "🍎 点击下方“分享”按钮 -> “添加到主屏幕”";
+        banner.style.display = 'block';
+      }, 3000);
+    }
+  });
 
   // --- 业务逻辑 ---
   let missionData = JSON.parse(localStorage.getItem('sales_pwa_v4')) || {
