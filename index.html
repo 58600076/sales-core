@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Sales-Core | 困难崩塌 PWA</title>
+  <title>刘江app | 困难崩塌 PWA</title>
 
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#3182ce">
@@ -12,7 +12,6 @@
   <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1162/1162460.png">
 
   <style>
-    /* 继承 v4.3 精髓样式 */
     :root {
       --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
       --accent-blue: #3182ce;
@@ -21,10 +20,7 @@
       --led-text: #f6ad55;
       --success-green: #38a169;
     }
-
     body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg-gradient); margin: 0; padding: 0; min-height: 100vh; }
-
-    /* LED 滚动条 */
     .led-banner { background: var(--led-bg); color: var(--led-text); height: 44px; line-height: 44px; overflow: hidden; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
     .marquee-wrapper { display: flex; width: fit-content; animation: marquee 60s linear infinite; }
     .marquee-content { display: flex; white-space: nowrap; }
@@ -35,42 +31,31 @@
     header { text-align: center; margin-bottom: 25px; }
     h1 { color: var(--accent-blue); font-size: 1.5rem; margin-bottom: 10px; }
 
-    /* PWA 引导横幅 - 增强版 */
+    /* 强制显示的安装横幅 */
     #installBanner {
-      display: none; /* 逻辑控制显示 */
-      background: var(--accent-blue); color: white;
-      padding: 0 20px;
-      height: 50px;
-      line-height: 50px;
+      display: none; background: var(--accent-blue); color: white;
+      padding: 0 20px; height: 50px; line-height: 50px;
       position: fixed; bottom: 20px; left: 20px; right: 20px;
       border-radius: 50px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-      z-index: 9999; animation: slideUp 0.5s ease-out;
-      display: flex; justify-content: space-between; align-items: center;
+      z-index: 9999; display: flex; justify-content: space-between; align-items: center;
     }
-    #installText { flex: 1; font-weight: bold; cursor: pointer; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    #closeBanner { width: 30px; height: 30px; line-height: 30px; text-align: center; font-size: 20px; cursor: pointer; opacity: 0.8; }
-
-    @keyframes slideUp { from { transform: translateY(100px); } to { transform: translateY(0); } }
+    #installText { flex: 1; font-weight: bold; cursor: pointer; }
+    #closeBanner { width: 30px; text-align: center; cursor: pointer; opacity: 0.8; }
 
     .main-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; max-width: 1200px; margin: 0 auto; }
     .card { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
     h2 { margin-top: 0; font-size: 1.1rem; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; margin-bottom: 15px; }
-
-    .slot { background: #fff; border: 1px solid #eee; border-left: 5px solid #cbd5e0; padding: 15px; border-radius: 8px; margin-bottom: 12px; transition: 0.3s; }
+    .slot { background: #fff; border: 1px solid #eee; border-left: 5px solid #cbd5e0; padding: 15px; border-radius: 8px; margin-bottom: 12px; }
     .slot.filled { border-left-color: var(--success-green); background: #f0fff4; }
-
     input, textarea { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; background: #f8fafc; font-size: 1rem; margin-bottom: 10px; }
-    textarea { height: 80px; resize: vertical; }
-
     .btn-export { background: var(--success-green); color: white; border: none; padding: 16px; border-radius: 10px; width: 100%; font-weight: bold; font-size: 1.1rem; cursor: pointer; margin-top: 20px; }
-
-    @media (max-width: 768px) { .main-grid { grid-template-columns: 1fr; } .strategy-col { order: 2; } }
+    @media (max-width: 768px) { .main-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
 
 <div id="installBanner">
-  <div id="installText" onclick="triggerInstall()">🚀 点击安装“冲锋号”到桌面</div>
+  <div id="installText" onclick="triggerInstall()">⚡ 点击将“刘江app”添加到手机桌面</div>
   <div id="closeBanner" onclick="document.getElementById('installBanner').style.display='none'">×</div>
 </div>
 
@@ -87,7 +72,7 @@
 
 <div class="container">
   <header>
-    <h1>每日销售-困难从这里开始崩坍</h1>
+    <h1>刘江app-困难从这里开始崩坍</h1>
     <div id="dailyQuote" style="color:var(--accent-orange); font-weight:600;">销售是提供价值的机会</div>
   </header>
 
@@ -96,14 +81,11 @@
       <h2>🛡️ 战略库</h2>
       <input type="text" id="theme" placeholder="今日连接主题..." onchange="saveData()">
       <textarea id="script" placeholder="积极的话术逻辑..." onchange="saveData()"></textarea>
-      <div style="font-size:0.8rem; color:#718096;">*数据保存在本地，即使断网也能使用</div>
     </div>
-
     <div class="card">
       <h2>⚔️ 前线战场</h2>
       <div id="slotsContainer"></div>
     </div>
-
     <div class="action-bar" style="grid-column: 1/-1;">
       <button class="btn-export" onclick="exportCSV()">🎉 完成任务并导出战报</button>
     </div>
@@ -111,10 +93,9 @@
 </div>
 
 <script>
-  // --- PWA 核心 ---
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js').then(reg => console.log('PWA Ready'));
+      navigator.serviceWorker.register('sw.js');
     });
   }
 
@@ -122,40 +103,25 @@
   const banner = document.getElementById('installBanner');
   const installText = document.getElementById('installText');
 
-  // 1. 自动捕获安装事件
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    showBanner();
+    checkAndShow();
   });
 
-  // 2. 永久显示逻辑：如果不是以 App 模式打开，直接强制显示
-  function showBanner() {
+  function checkAndShow() {
     if (!isStandalone()) {
       banner.style.display = 'flex';
     }
   }
 
-  // 3. iOS 特殊引导文字修改
-  function applyIosPrompt() {
-    if (isIos() && !isStandalone()) {
-      installText.innerHTML = "🍎 点击底部“分享”图标 -> “添加到主屏幕”";
-      banner.style.display = 'flex';
-    }
-  }
-
-  // 页面加载后立即检查显示状态
   window.addEventListener('DOMContentLoaded', () => {
-    applyIosPrompt();
-    // 安卓/PC 即使没有捕获到事件也先行显示，通过 triggerInstall 处理不同情况
-    if (!isIos() && !isStandalone()) {
+    if (isIos() && !isStandalone()) {
+      installText.innerHTML = "🍎 点击下方“分享”按钮 -> “添加到主屏幕”";
+      banner.style.display = 'flex';
+    } else if (!isStandalone()) {
       banner.style.display = 'flex';
     }
-  });
-
-  window.addEventListener('appinstalled', () => {
-    banner.style.display = 'none';
-    deferredPrompt = null;
   });
 
   function triggerInstall() {
@@ -167,22 +133,17 @@
       });
     } else {
       if (isIos()) {
-        alert("🍎 iOS 提示：\n请点击 Safari 浏览器底部的‘分享’按钮，找到‘添加到主屏幕’即可。");
+        alert("🍎 iOS 提示：请点击底部的‘分享’按钮，选择‘添加到主屏幕’");
       } else {
-        alert("🤖 提示：\n请点击浏览器右上角的菜单（三个点），选择‘安装应用’或‘添加到主屏幕’。");
+        alert("🤖 提示：请点击浏览器菜单中的‘安装应用’或‘添加到主屏幕’");
       }
     }
   }
 
-  function isIos() {
-    return /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
-  }
+  function isIos() { return /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase()); }
+  function isStandalone() { return (window.navigator.standalone) || (window.matchMedia('(display-mode: standalone)').matches); }
 
-  function isStandalone() {
-    return (window.navigator.standalone) || (window.matchMedia('(display-mode: standalone)').matches);
-  }
-
-  // --- 业务逻辑 (保持不动) ---
+  // 业务逻辑部分
   let missionData = JSON.parse(localStorage.getItem('sales_pwa_v4')) || {
     theme: '', script: '', records: Array(5).fill().map(() => ({ target: '', result: '', date: '' }))
   };
@@ -222,9 +183,8 @@
     let csv = "\uFEFF日期,目标,结果\n";
     missionData.records.forEach(r => { if(r.target) csv += `"${r.date}","${r.target}","${r.result}"\n`; });
     const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url;
+    a.href = URL.createObjectURL(blob);
     a.download = `战报_${new Date().toLocaleDateString()}.csv`;
     a.click();
     if(confirm("战报已下载，是否开启新的一天？")) {
@@ -232,7 +192,6 @@
       location.reload();
     }
   }
-
   init();
 </script>
 </body>
