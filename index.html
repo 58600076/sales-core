@@ -35,14 +35,21 @@
     header { text-align: center; margin-bottom: 25px; }
     h1 { color: var(--accent-blue); font-size: 1.5rem; margin-bottom: 10px; }
 
-    /* PWA 引导横幅 */
+    /* PWA 引导横幅 - 增强版 */
     #installBanner {
-      display: none; background: var(--accent-blue); color: white;
-      padding: 12px; text-align: center; font-weight: bold;
+      display: none; /* 逻辑控制显示 */
+      background: var(--accent-blue); color: white;
+      padding: 0 20px;
+      height: 50px;
+      line-height: 50px;
       position: fixed; bottom: 20px; left: 20px; right: 20px;
       border-radius: 50px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-      z-index: 9999; cursor: pointer; animation: slideUp 0.5s ease-out;
+      z-index: 9999; animation: slideUp 0.5s ease-out;
+      display: flex; justify-content: space-between; align-items: center;
     }
+    #installText { flex: 1; font-weight: bold; cursor: pointer; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #closeBanner { width: 30px; height: 30px; line-height: 30px; text-align: center; font-size: 20px; cursor: pointer; opacity: 0.8; }
+
     @keyframes slideUp { from { transform: translateY(100px); } to { transform: translateY(0); } }
 
     .main-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; max-width: 1200px; margin: 0 auto; }
@@ -62,7 +69,10 @@
 </head>
 <body>
 
-<div id="installBanner" onclick="triggerInstall()">🚀 觉得好用？点击安装到桌面 (App模式)</div>
+<div id="installBanner">
+  <div id="installText" onclick="triggerInstall()">🚀 点击安装“冲锋号”到桌面</div>
+  <div id="closeBanner" onclick="document.getElementById('installBanner').style.display='none'">×</div>
+</div>
 
 <div class="led-banner">
   <div class="marquee-wrapper">
@@ -110,58 +120,69 @@
 
   let deferredPrompt;
   const banner = document.getElementById('installBanner');
+  const installText = document.getElementById('installText');
 
-  // 监听安装事件
+  // 1. 自动捕获安装事件
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    banner.style.display = 'block'; // 主动显示手动安装横幅
+    showBanner();
   });
 
-  // 监听已安装事件
+  // 2. 永久显示逻辑：如果不是以 App 模式打开，直接强制显示
+  function showBanner() {
+    if (!isStandalone()) {
+      banner.style.display = 'flex';
+    }
+  }
+
+  // 3. iOS 特殊引导文字修改
+  function applyIosPrompt() {
+    if (isIos() && !isStandalone()) {
+      installText.innerHTML = "🍎 点击底部“分享”图标 -> “添加到主屏幕”";
+      banner.style.display = 'flex';
+    }
+  }
+
+  // 页面加载后立即检查显示状态
+  window.addEventListener('DOMContentLoaded', () => {
+    applyIosPrompt();
+    // 安卓/PC 即使没有捕获到事件也先行显示，通过 triggerInstall 处理不同情况
+    if (!isIos() && !isStandalone()) {
+      banner.style.display = 'flex';
+    }
+  });
+
   window.addEventListener('appinstalled', () => {
     banner.style.display = 'none';
     deferredPrompt = null;
-    console.log('App 已成功安装');
   });
 
   function triggerInstall() {
     if (deferredPrompt) {
       deferredPrompt.prompt();
       deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === 'accepted') {
-          banner.style.display = 'none';
-        }
+        if (choiceResult.outcome === 'accepted') banner.style.display = 'none';
         deferredPrompt = null;
       });
     } else {
-      // 针对不支持或已安装情况的引导
       if (isIos()) {
-        alert("🍎 iOS 用户请点击浏览器底部的‘分享’按钮，然后选择‘添加到主屏幕’");
+        alert("🍎 iOS 提示：\n请点击 Safari 浏览器底部的‘分享’按钮，找到‘添加到主屏幕’即可。");
       } else {
-        alert("请在浏览器菜单中选择‘添加到主屏幕’或‘安装应用’");
+        alert("🤖 提示：\n请点击浏览器右上角的菜单（三个点），选择‘安装应用’或‘添加到主屏幕’。");
       }
     }
   }
 
-  // iOS 特殊引导判断
   function isIos() {
     return /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
   }
 
-  const isStandalone = () => ('standalone' in window.navigator) && (window.navigator.standalone);
+  function isStandalone() {
+    return (window.navigator.standalone) || (window.matchMedia('(display-mode: standalone)').matches);
+  }
 
-  // 初始化检查
-  window.addEventListener('DOMContentLoaded', () => {
-    if (isIos() && !isStandalone()) {
-      setTimeout(() => {
-        banner.innerHTML = "🍎 点击下方“分享”按钮 -> “添加到主屏幕”";
-        banner.style.display = 'block';
-      }, 3000);
-    }
-  });
-
-  // --- 业务逻辑 ---
+  // --- 业务逻辑 (保持不动) ---
   let missionData = JSON.parse(localStorage.getItem('sales_pwa_v4')) || {
     theme: '', script: '', records: Array(5).fill().map(() => ({ target: '', result: '', date: '' }))
   };
