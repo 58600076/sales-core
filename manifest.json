@@ -1,0 +1,16 @@
+{
+  "name": "每日销售冲锋号",
+  "short_name": "冲锋号",
+  "description": "困难从这里开始崩坍",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f5f7fa",
+  "theme_color": "#3182ce",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1162/1162460.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
