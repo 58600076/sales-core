@@ -1,6 +1,6 @@
 {
   "name": "每日销售冲锋号",
-  "short_name": "冲锋号",
+  "short_name": "刘江app",
   "description": "困难从这里开始崩坍",
   "start_url": "index.html",
   "display": "standalone",
@@ -13,4 +13,5 @@
       "type": "image/png"
     }
   ]
+
 }
